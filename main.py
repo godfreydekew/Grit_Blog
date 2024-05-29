@@ -77,6 +77,36 @@ def show_post(post_id):
     return render_template("post.html", post=requested_post)
 
 
+@app.route('/new-post', methods=['POST', 'GET'])
+def new_post():
+    """
+    Endpoint to create a new blog post
+    parameters for POST will be retrieved from the form fields
+    :return:
+    """
+    my_form = PostForm()
+    x = datetime.datetime.now()
+    month = x.strftime("%B")
+    day = x.strftime("%d")
+    year = x.strftime("%Y")
+    if request.method == 'POST':
+        if my_form.validate_on_submit():
+            # Form was submitted, handle the data here
+            my_new_post = BlogPost(
+                title=request.form['title'],
+                subtitle=request.form['sub_title'],
+                author=request.form['author'],
+                img_url=request.form['image_url'],
+                body=request.form['body'],
+                date=f"{month} {day}, {year}",
+            )
+            db.session.add(my_new_post)
+            db.session.commit()
+
+        return render_template("index.html")
+    return render_template("make-post.html", form=my_form)
+
+
 @app.route("/about")
 def about():
     return render_template("about.html")
@@ -120,13 +150,7 @@ def contact():
         return render_template("contact.html", message=success_message)
 
 
-@app.route("/post/<int:index>")
-def show_post(index):
-    requested_post = None
-    for blog_post in posts:
-        if blog_post["id"] == index:
-            requested_post = blog_post
-    return render_template("post.html", post=requested_post)
+
 
 
 if __name__ == "__main__":
