@@ -134,6 +134,18 @@ def edit(post_id):
         return redirect(url_for("show_post", post_id=post_id))
 
 
+@app.route('/delete/<post_id>')
+def delete(post_id):
+    """
+    This endpoint allow users to delete a post dynamically
+    the changes will be updated automatically
+    """
+    post = db.session.get(BlogPost, post_id)
+    db.session.delete(post)
+    db.session.commit()
+    return redirect(url_for("get_all_posts"))
+
+
 @app.route("/about")
 def about():
     return render_template("about.html")
