@@ -14,7 +14,7 @@ my_email = "dekewgodfrey@gmail.com"
 password = "xibegzoydgxlerka"
 
 #A fake blog api for testing purposes
-posts = requests.get("https://api.npoint.io/c790b4d5cab58020d391").json()
+#posts = requests.get("https://api.npoint.io/c790b4d5cab58020d391").json()
 
 app = Flask(__name__)
 ckeditor = CKEditor(app)
@@ -58,6 +58,11 @@ class PostForm(FlaskForm):
 
 @app.route('/')
 def get_all_posts():
+    """
+    This function returns all the blog posts
+    """
+    result = db.session.execute(db.select(BlogPost))
+    posts = result.scalars().all()
     return render_template("index.html", all_posts=posts)
 
 
