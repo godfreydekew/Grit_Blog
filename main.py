@@ -27,6 +27,9 @@ db.init_app(app)
 
 
 class BlogPost(db.Model):
+    """
+    This class represents a blog post data model
+    """
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(250), unique=True, nullable=False)
     subtitle = db.Column(db.String(250), nullable=False)
@@ -37,6 +40,9 @@ class BlogPost(db.Model):
 
 
 with app.app_context():
+    """
+    Create the database tables if they don't exist
+    """
     db.create_all()
 @app.route('/')
 def get_all_posts():
