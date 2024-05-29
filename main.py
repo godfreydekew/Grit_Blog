@@ -73,7 +73,8 @@ def show_post(post_id):
     This function returns a single blog post
     with given i din the database
     '''
-    requested_post = db.session.get(BlogPost, post_id)
+    requested_post = db.get_or_404(BlogPost, post_id)
+    #requested_post = db.session.get(BlogPost, post_id)
     return render_template("post.html", post=requested_post)
 
 
@@ -103,7 +104,7 @@ def new_post():
             db.session.add(my_new_post)
             db.session.commit()
 
-        return render_template("index.html")
+        return redirect(url_for("get_all_posts"))
     return render_template("make-post.html", form=my_form)
 
 
