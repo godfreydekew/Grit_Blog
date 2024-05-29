@@ -107,6 +107,33 @@ def new_post():
     return render_template("make-post.html", form=my_form)
 
 
+@app.route('/edit-post/<post_id>', methods=['GET', 'POST'])
+def edit(post_id):
+    """
+    This endpoint allow users to edit a post dynamically
+    the changes will be updated automatically
+    """
+    post = db.session.get(BlogPost, post_id)
+    edit_form = PostForm(
+        title=post.title,
+        sub_title=post.subtitle,
+        image_url=post.img_url,
+        author=post.author,
+        body=post.body
+    )
+
+    if request.method == 'GET':
+        return render_template("make-post.html", form=edit_form)
+    else:
+        post.title = request.form['title']
+        post.subtitle = request.form['sub_title']
+        post.img_url = request.form['image_url']
+        post.author = request.form['author']
+        post.body = request.form['body']
+        db.session.commit()
+        return redirect(url_for("show_post", post_id=post_id))
+
+
 @app.route("/about")
 def about():
     return render_template("about.html")
@@ -148,9 +175,6 @@ def contact():
             )
 
         return render_template("contact.html", message=success_message)
-
-
-
 
 
 if __name__ == "__main__":
