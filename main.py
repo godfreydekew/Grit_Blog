@@ -44,6 +44,18 @@ with app.app_context():
     Create the database tables if they don't exist
     """
     db.create_all()
+
+class PostForm(FlaskForm):
+    """
+    This class represents a form for creating a blog post
+    """
+    title = StringField('Title')
+    sub_title = StringField('Subtitle')
+    author = StringField('Author')
+    image_url = StringField('Image_url')
+    body = CKEditorField('Body')  # <--
+    submit = SubmitField('Submit')
+
 @app.route('/')
 def get_all_posts():
     return render_template("index.html", all_posts=posts)
