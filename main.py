@@ -38,6 +38,16 @@ class BlogPost(db.Model):
     author = db.Column(db.String(250), nullable=False)
     img_url = db.Column(db.String(250), nullable=False)
 
+class User(db.Model):
+    """
+    This class represents a user data model
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(250), unique=True, nullable=False)
+    name = db.Column(db.String(250), unique=True, nullable=False)
+    password = db.Column(db.String(250), nullable=False)
+
+
 
 with app.app_context():
     """
@@ -177,7 +187,8 @@ def contact():
         email_content += f"Email: {email}\n"
         email_content += f"Number: {number}\n"
         email_content += f"Message:\n{message}"
-        # sendimh email to myself
+        # send email to myself
+
 
         with smtplib.SMTP("smtp.gmail.com") as connection:
             connection.starttls()
