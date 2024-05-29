@@ -9,12 +9,11 @@ import datetime
 import requests
 import smtplib
 
-
 my_email = "dekewgodfrey@gmail.com"
 password = "xibegzoydgxlerka"
 
-#A fake blog api for testing purposes
-#posts = requests.get("https://api.npoint.io/c790b4d5cab58020d391").json()
+# A fake blog api for testing purposes
+# posts = requests.get("https://api.npoint.io/c790b4d5cab58020d391").json()
 
 app = Flask(__name__)
 ckeditor = CKEditor(app)
@@ -45,6 +44,7 @@ with app.app_context():
     """
     db.create_all()
 
+
 class PostForm(FlaskForm):
     """
     This class represents a form for creating a blog post
@@ -56,6 +56,7 @@ class PostForm(FlaskForm):
     body = CKEditorField('Body')  # <--
     submit = SubmitField('Submit')
 
+
 @app.route('/')
 def get_all_posts():
     """
@@ -64,6 +65,16 @@ def get_all_posts():
     result = db.session.execute(db.select(BlogPost))
     posts = result.scalars().all()
     return render_template("index.html", all_posts=posts)
+
+
+@app.route('/<int:post_id>')
+def show_post(post_id):
+    '''
+    This function returns a single blog post
+    with given i din the database
+    '''
+    requested_post = db.session.get(BlogPost, post_id)
+    return render_template("post.html", post=requested_post)
 
 
 @app.route("/about")
@@ -95,7 +106,7 @@ def contact():
         email_content += f"Email: {email}\n"
         email_content += f"Number: {number}\n"
         email_content += f"Message:\n{message}"
-        #sendimh email to myself
+        # sendimh email to myself
 
         with smtplib.SMTP("smtp.gmail.com") as connection:
             connection.starttls()
@@ -116,7 +127,6 @@ def show_post(index):
         if blog_post["id"] == index:
             requested_post = blog_post
     return render_template("post.html", post=requested_post)
-
 
 
 if __name__ == "__main__":
