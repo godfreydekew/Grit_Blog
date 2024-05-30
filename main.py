@@ -10,13 +10,13 @@ import requests
 import smtplib
 from sqlalchemy import Integer, String, Text
 
-#Log in information for SMTPLIB
+# Log in information for SMTPLIB
 my_email = "dekewgodfrey@gmail.com"
 password = "xibegzoydgxlerka"
 
 app = Flask(__name__)
 
-#Editor for the custom textfield
+# Editor for the custom textfield
 ckeditor = CKEditor(app)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
 Bootstrap5(app)
@@ -24,7 +24,7 @@ Bootstrap5(app)
 # A fake blog api for testing purposes
 # posts = requests.get("https://api.npoint.io/c790b4d5cab58020d391").json()
 
-#Creating SQLite database
+# Creating SQLite database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
 db = SQLAlchemy()
 db.init_app(app)
@@ -42,6 +42,7 @@ class BlogPost(db.Model):
     author = db.Column(db.String(250), nullable=False)
     img_url = db.Column(db.String(250), nullable=False)
 
+
 class User(db.Model):
     """
     This class represents a user data model
@@ -50,6 +51,7 @@ class User(db.Model):
     email = db.Column(db.String(250), unique=True, nullable=False)
     name = db.Column(db.String(250), unique=True, nullable=False)
     password = db.Column(db.String(250), nullable=False)
+
 
 with app.app_context():
     """
@@ -93,7 +95,7 @@ def show_post(post_id):
         str: The Post HTML page
     '''
     requested_post = db.get_or_404(BlogPost, post_id)
-    #requested_post = db.session.get(BlogPost, post_id)
+    # requested_post = db.session.get(BlogPost, post_id)
     return render_template("post.html", post=requested_post)
 
 
@@ -193,7 +195,8 @@ def about():
 @app.route("/contact", methods=['POST', 'GET'])
 def contact():
     """
-    This function returns the contact page
+    This function allow users to contact the admin with
+    email and, they can send their feedback
 
     returns:
         str: The HTML for the contact page with a form
@@ -215,9 +218,8 @@ def contact():
         email_content += f"Email: {email}\n"
         email_content += f"Number: {number}\n"
         email_content += f"Message:\n{message}"
-        # send email to myself
 
-
+        # send email to myself with the user information
         with smtplib.SMTP("smtp.gmail.com") as connection:
             connection.starttls()
             connection.login(user=my_email, password=password)
