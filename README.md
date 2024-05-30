@@ -33,8 +33,9 @@ ___
    ```bash
    Open your web browser and navigate to http://localhost:5001/
    
-![Flask Logo](/static/assets/img/readme.png)
-
+![Home page](/static/assets/img/readme.png)
+![New Post](/static/assets/img/newpost.png)
+![Contact](/static/assets/img/contact.png)
 ## Testing
 ___
 
