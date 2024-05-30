@@ -33,6 +33,8 @@ ___
    ```bash
    Open your web browser and navigate to http://localhost:5001/
    
+![Flask Logo](/static/assets/img/readme.png)
+
 ## Testing
 ___
 
