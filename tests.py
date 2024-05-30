@@ -2,9 +2,14 @@ import unittest
 from main import app, db, BlogPost
 from flask import url_for
 
+
 class FlaskAppTests(unittest.TestCase):
 
     def setUp(self):
+        """
+        Creates the sql temporary database for unit test
+        :return:
+        """
         app.config['TESTING'] = True
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
         self.client = app.test_client()
@@ -12,21 +17,33 @@ class FlaskAppTests(unittest.TestCase):
             db.create_all()
 
     def tearDown(self):
+        """
+        Drops the sql temporary database for unit test
+        """
         with app.app_context():
             db.drop_all()
 
     def test_home_page(self):
+        """
+        Test if the home page is being rendered
+        """
         with app.test_request_context():
             response = self.client.get(url_for('get_all_posts'))
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"Grit Blog", response.data)
 
     def test_new_post_page(self):
+        """
+        Test if the new post page is being rendered
+        """
         with app.test_request_context():
             response = self.client.get(url_for('new_post'))
         self.assertEqual(response.status_code, 200)
 
     def test_create_post(self):
+        """
+        Checks if the post was created with given data
+        """
         with app.test_request_context():
             response = self.client.post(url_for('new_post'), data={
                 'title': 'Test Title',
@@ -38,8 +55,10 @@ class FlaskAppTests(unittest.TestCase):
             }, follow_redirects=True)
         self.assertEqual(response.status_code, 200)
 
-
     def test_show_post(self):
+        """
+        Checks if the post was  added to the db  and being rendered dynamically
+        """
         with app.test_request_context():
             post = BlogPost(
                 title='Test Title',
@@ -57,6 +76,9 @@ class FlaskAppTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_edit_post_page(self):
+        """
+        Checks if the edit post page is available when user clicks edit post
+        """
         with app.test_request_context():
             post = BlogPost(
                 title='Test Title',
@@ -100,6 +122,9 @@ class FlaskAppTests(unittest.TestCase):
         self.assertEqual(updated_post.author, 'Updated Author')
 
     def test_delete_post(self):
+        """
+        Checks if the post was deleted from the db
+        """
         with app.test_request_context():
             post = BlogPost(
                 title='Test Title',
@@ -118,18 +143,27 @@ class FlaskAppTests(unittest.TestCase):
         self.assertIsNone(deleted_post)
 
     def test_about_page(self):
+        """
+        Test if the about page is being rendered
+        """
         with app.test_request_context():
             response = self.client.get(url_for('about'))
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"About", response.data)
 
     def test_contact_page(self):
+        """
+        Test if the contact page is being rendered
+        """
         with app.test_request_context():
             response = self.client.get(url_for('contact'))
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"Contact", response.data)
 
     def test_contact_form_submission(self):
+        """
+        Test if the contact form is being submitted
+        """
         with app.test_request_context():
             response = self.client.post(url_for('contact'), data={
                 'name': 'John Doe',
@@ -141,6 +175,7 @@ class FlaskAppTests(unittest.TestCase):
         self.assertIn(b"Successfully sent your message", response.data)
 
     # Add more test methods as needed
+
 
 if __name__ == "__main__":
     unittest.main()
