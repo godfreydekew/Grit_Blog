@@ -1,26 +1,30 @@
+import datetime
 from flask import Flask, render_template, redirect, url_for, request
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Integer, String, Text
 from flask_wtf import FlaskForm
+from flask_ckeditor import CKEditor, CKEditorField
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired, URL
-from flask_ckeditor import CKEditor, CKEditorField
-import datetime
 import requests
 import smtplib
+from sqlalchemy import Integer, String, Text
 
+#Log in information for SMTPLIB
 my_email = "dekewgodfrey@gmail.com"
 password = "xibegzoydgxlerka"
 
-# A fake blog api for testing purposes
-# posts = requests.get("https://api.npoint.io/c790b4d5cab58020d391").json()
-
 app = Flask(__name__)
+
+#Editor for the custom textfield
 ckeditor = CKEditor(app)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
 Bootstrap5(app)
 
+# A fake blog api for testing purposes
+# posts = requests.get("https://api.npoint.io/c790b4d5cab58020d391").json()
+
+#Creating SQLite database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
 db = SQLAlchemy()
 db.init_app(app)
@@ -47,8 +51,6 @@ class User(db.Model):
     name = db.Column(db.String(250), unique=True, nullable=False)
     password = db.Column(db.String(250), nullable=False)
 
-
-
 with app.app_context():
     """
     Create the database tables if they don't exist
@@ -72,6 +74,9 @@ class PostForm(FlaskForm):
 def get_all_posts():
     """
     This function returns all the blog posts
+
+    returns:
+        str: The Index HTML page
     """
     result = db.session.execute(db.select(BlogPost))
     posts = result.scalars().all()
@@ -83,6 +88,9 @@ def show_post(post_id):
     '''
     This function returns a single blog post
     with given i din the database
+
+    returns:
+        str: The Post HTML page
     '''
     requested_post = db.get_or_404(BlogPost, post_id)
     #requested_post = db.session.get(BlogPost, post_id)
@@ -94,7 +102,9 @@ def new_post():
     """
     Endpoint to create a new blog post
     parameters for POST will be retrieved from the form fields
-    :return:
+
+    returns:
+        str: If post request home page is rendered otherwise make_post
     """
     my_form = PostForm()
     x = datetime.datetime.now()
@@ -124,6 +134,9 @@ def edit(post_id):
     """
     This endpoint allow users to edit a post dynamically
     the changes will be updated automatically
+
+    returns:
+        str: The HTML with flask form to edit the post
     """
     post = db.session.get(BlogPost, post_id)
     edit_form = PostForm(
@@ -151,6 +164,9 @@ def delete(post_id):
     """
     This endpoint allow users to delete a post dynamically
     the changes will be updated automatically
+
+    returns:
+        str: The HTML of home page with all the post
     """
     post = db.session.get(BlogPost, post_id)
     db.session.delete(post)
@@ -160,6 +176,12 @@ def delete(post_id):
 
 @app.route("/about")
 def about():
+    """
+    This function returns the about page
+
+    returns:
+        str: The HTML for the about page
+    """
     return render_template("about.html")
 
 
@@ -170,6 +192,12 @@ def about():
 
 @app.route("/contact", methods=['POST', 'GET'])
 def contact():
+    """
+    This function returns the contact page
+
+    returns:
+        str: The HTML for the contact page with a form
+    """
     if request.method == "GET":
         return render_template("contact.html")
     else:
