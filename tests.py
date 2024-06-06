@@ -1,5 +1,5 @@
 import unittest
-from main import app, db, BlogPost
+from app import app, db, BlogPost
 from flask import url_for
 
 
