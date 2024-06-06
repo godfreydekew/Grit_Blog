@@ -6,7 +6,6 @@ from flask_wtf import FlaskForm
 from flask_ckeditor import CKEditor, CKEditorField
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired, URL
-import requests
 import smtplib
 from sqlalchemy import Integer, String, Text
 
