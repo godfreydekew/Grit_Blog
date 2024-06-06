@@ -57,7 +57,8 @@ class FlaskAppTests(unittest.TestCase):
 
     def test_show_post(self):
         """
-        Checks if the post was  added to the db  and being rendered dynamically
+        Checks if the post was  added to the db  and being rendered dynamically]
+        and also can it be retrieved from the database with its id
         """
         with app.test_request_context():
             post = BlogPost(
@@ -166,10 +167,10 @@ class FlaskAppTests(unittest.TestCase):
         """
         with app.test_request_context():
             response = self.client.post(url_for('contact'), data={
-                'name': 'John Doe',
-                'email': 'john.doe@example.com',
+                'name': 'Dr Ferhun',
+                'email': 'firhune@example.com',
                 'phone': '123456789',
-                'message': 'This is a test message',
+                'message': 'Good afternoon Godfrey , i saw your website it looks good',
             }, follow_redirects=True)
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"Successfully sent your message", response.data)

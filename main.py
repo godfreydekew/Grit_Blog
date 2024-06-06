@@ -89,7 +89,7 @@ def get_all_posts():
 def show_post(post_id):
     '''
     This function returns a single blog post
-    with given i din the database
+    with given id in the database
 
     returns:
         str: The Post HTML page
