@@ -1,0 +1,6 @@
+.env
+.venv
+env/
+venv/
+instance/posts.db
+__pycache__/
